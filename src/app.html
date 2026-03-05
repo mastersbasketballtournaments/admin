@@ -4,8 +4,34 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		%sveltekit.head%
+		<link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
 	</head>
+
 	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
+		<header>
+			<h1>Masters Basketball Tournaments</h1>
+
+			<nav>
+				<ul>
+					<!-- <li><a class="current" href="/">Home</a></li> -->
+					<li><a href="/dashboard">Dashboard</a></li>
+					<li><a href="/tournaments">Tournaments</a></li>
+					<li><a href="/competitions">Competitions</a></li>
+					<li><a href="/register">Register</a></li>
+					<li><a href="/signin">Sign In</a></li>
+					<li>
+						<form method="post" action="/?/signOut" use:enhance>
+							<button class="button">Sign out</button>
+						</form>
+					</li>
+				</ul>
+			</nav>
+		</header>
+
+		<main>
+			%sveltekit.body%
+		</main>
+
+		<footer></footer>
 	</body>
 </html>
