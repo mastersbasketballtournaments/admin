@@ -6,4 +6,7 @@ export const task = mysqlTable('task', {
 	priority: int('priority').notNull().default(1)
 });
 
-export *  from './auth.schema';
+export * from './auth.schema';
+export * from './schema/competitions';
+export * from './schema/tournaments';
+export * from './schema/tournaments2competitions';
