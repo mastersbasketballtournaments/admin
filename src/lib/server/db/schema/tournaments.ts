@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 import { mysqlTable, char, varchar, datetime, date } from 'drizzle-orm/mysql-core';
 
 export const tournaments = mysqlTable( 'tournaments', {
-	id: char( 'id', { length: 36 } ).primaryKey().notNull(),
+	id: varchar( 'id', { length: 255 } ).primaryKey().notNull(),
 
 	old_id: char( { length: 36 } ),
 
