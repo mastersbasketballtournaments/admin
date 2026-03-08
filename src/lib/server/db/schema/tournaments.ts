@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import { mysqlTable, char, varchar, datetime, date } from 'drizzle-orm/mysql-core';
 
 export const tournaments = mysqlTable( 'tournaments', {
@@ -7,8 +7,8 @@ export const tournaments = mysqlTable( 'tournaments', {
 	old_id: char( { length: 36 } ),
 
 	name: varchar( 'name', { length: 255 } ).notNull(),
-	dateStart: date( 'dateStart' ).notNull(),
-	dateEnd: date( 'dateEnd' ).notNull(),
+	dateStart: date( 'dateStart', { mode: 'string' } ).notNull(),
+	dateEnd: date( 'dateEnd', { mode: 'string' } ).notNull(),
 	contact: varchar( 'contact', { length: 255 } ).notNull(),
 	emailAddress: varchar( 'emailAddress', { length: 255 } ).notNull(),
 	website: varchar( 'website', { length: 255 } ),
