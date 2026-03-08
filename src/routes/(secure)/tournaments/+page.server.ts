@@ -1,30 +1,25 @@
+import { redirect } from '@sveltejs/kit'
 import { db } from '$lib/server/db';
-// import { eq } from 'drizzle-orm';
-// import { tournaments, tournaments2competitions } from '$lib/server/db/schema';
+import { eq } from 'drizzle-orm';
 import { tournaments } from '$lib/server/db/schema';
-
-// import crypto from 'node:crypto';
 
 export async function load() {
 	const allTournaments = await db.select()
 		.from( tournaments )
 		.orderBy( tournaments.name );
 
-	/* for ( const tournament of allTournaments ) {
-		const uuid = crypto.randomUUID();
-
-		await db.update(tournaments)
-			.set({ id: uuid })
-			.where( eq( tournaments.id, tournament.id ) );
-	} */
-
-	/* for ( const tournament of allTournaments ) {
-		const uuid = crypto.randomUUID();
-
-		await db.update(tournaments2competitions)
-			.set( { tournamentID: tournament.id } )
-			.where( eq( tournaments2competitions.old_tournamentID, tournament.old_id ) );
-	} */
-
 	return { tournaments: allTournaments };
+}
+
+export const actions: Actions = {
+	delete: async ( { request } ) => {
+		const formData = await request.formData();
+
+		const id = formData.get( 'id' );
+
+		await db.delete( tournaments )
+			.where( eq( tournaments.id, id ) );
+
+		redirect( 303, '/tournaments' );
+	},
 }

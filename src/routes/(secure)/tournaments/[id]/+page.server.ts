@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from './$types'
 
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
-import { tournaments, competitions } from '$lib/server/db/schema';
+import { tournaments, tournaments2competitions } from '$lib/server/db/schema';
 
 import crypto from 'node:crypto';
 import { log } from 'node:console';
@@ -45,8 +45,8 @@ export const load: PageServerLoad = async ( { params } ) => {
 
 	return {
 		tournament: null,
-		competitions: null,
-		assignedCompetitions: null
+		competitions: allCompetitions,
+		assignedCompetitions: []
 	};
 }
 
@@ -68,25 +68,38 @@ export const actions: Actions = {
 		const continent = formData.get( 'continent' ) as string;
 		const country = formData.get( 'country' ) as string;
 		const location = formData.get( 'location' ) as string;
+		const selectedCompetitions = formData.getAll( 'chosenCompetitions' ) as string[];
 
 		if ( id === 'add' ) {
-			await db.insert( tournaments ).values(
-				{
-					id: crypto.randomUUID(),
-					name: name,
-					dateStart: dateStart,
-					dateEnd: dateEnd,
-					contact: contact,
-					emailAddress: emailAddress,
-					website: website,
-					facebook: facebook,
-					twitter: twitter,
-					instagram: instagram,
-					continent: continent,
-					country: country,
-					location: location
+			await db.transaction(async (tx) => {
+				let tournamentUUID = crypto.randomUUID();
+
+				await db.insert( tournaments ).values(
+					{
+						id: tournamentUUID,
+						name: name,
+						dateStart: dateStart,
+						dateEnd: dateEnd,
+						contact: contact,
+						emailAddress: emailAddress,
+						website: website,
+						facebook: facebook,
+						twitter: twitter,
+						instagram: instagram,
+						continent: continent,
+						country: country,
+						location: location
+					}
+				);
+
+				if ( selectedCompetitions.length > 0 ) {
+					await tx.insert( tournaments2competitions )
+						.values( selectedCompetitions.map( competitionID => ( {
+							tournamentID: tournamentUUID,
+							competitionID,
+						} ) ) );
 				}
-			);
+			} );
 
 			/* if ( error ) {
 				return fail( 500, {
@@ -111,6 +124,19 @@ export const actions: Actions = {
 					country: country,
 					location: location
 				} ).where( eq( tournaments.id, id ) )
+
+				await db.transaction( async ( tx ) => {
+					await tx.delete( tournaments2competitions )
+						.where( eq( tournaments2competitions.tournamentID, id ) );
+
+					if ( selectedCompetitions.length > 0 ) {
+						await tx.insert( tournaments2competitions )
+							.values( selectedCompetitions.map( competitionID => ( {
+								tournamentID: id,
+								competitionID,
+							} ) ) );
+					}
+				} );
 
 			/* if ( error ) {
 				return fail( 500, {

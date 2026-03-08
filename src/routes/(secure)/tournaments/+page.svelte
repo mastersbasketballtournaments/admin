@@ -32,7 +32,6 @@
 		<thead>
 			<tr>
 				<th>Tournament</th>
-				<th>Date</th>
 				<th>Country</th>
 				<th></th>
 			</tr>
@@ -43,9 +42,8 @@
 				<tr>
 					<td>
 						<a href="/tournaments/{ tournament.id }">{ tournament.name }</a>
-						<a href="{ tournament.website}" target="_blank" rel="noopener noreferrer">link</a>
-					</td>
-					<td>{ formatDate.format( new Date( tournament.dateStart ) ) } - { formatDate.format( new Date( tournament.dateEnd ) ) }</td>
+						<a href="{ tournament.website}" target="_blank" rel="noopener noreferrer">link</a><br>
+						{ formatDate.format( new Date( tournament.dateStart ) ) } - { formatDate.format( new Date( tournament.dateEnd ) ) }</td>
 					<td>{ tournament.country }, { tournament.location }</td>
 					<td class="align-right">
 						<button onclick={ () => deleteRecord( tournament ) }>Delete</button>
