@@ -1,4 +1,6 @@
 <script>
+	import { enhance } from '$app/forms';
+
 	let { data } = $props();
 
 	const formatDate = new Intl.DateTimeFormat( 'en-GB', {
@@ -6,23 +8,6 @@
 		month: 'short',
 		year: 'numeric'
 	} );
-
-	async function deleteRecord( record ) {
-		const isConfirmed = window.confirm( `Are you sure you want to delete "${record.name}?"` );
-
-		if ( isConfirmed ) {
-			const formData = new FormData();
-
-			formData.append( 'id', record.id );
-
-			const response = await fetch( '?/delete', {
-				method: 'POST',
-				body: formData,
-			} );
-
-			location.href = '/tournaments';
-		}
-	}
 </script>
 
 <h1>Tournaments</h1>
@@ -46,7 +31,14 @@
 						{ formatDate.format( new Date( tournament.dateStart ) ) } - { formatDate.format( new Date( tournament.dateEnd ) ) }</td>
 					<td>{ tournament.country }, { tournament.location }</td>
 					<td class="align-right">
-						<button onclick={ () => deleteRecord( tournament ) }>Delete</button>
+						<form method="POST" action="?/delete" use:enhance={() => {
+							if ( !confirm( `Are you sure you want to delete "${tournament.name}"?` ) ) {
+								return () => {}; // cancel submission
+							}
+						} }>
+							<input name="id" type="hidden" value={tournament.id} />
+							<button>Delete</button>
+						</form>
 					</td>
 				</tr>
 			{/each}

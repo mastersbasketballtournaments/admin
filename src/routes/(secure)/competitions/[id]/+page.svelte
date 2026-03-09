@@ -1,8 +1,7 @@
 <script lang="ts">
 	import type { PageData, ActionData } from './$types';
 
-	export let data: PageData;
-	export let form: ActionData;
+	let { data, form }: { data: PageData, form: ActionData } = $props();
 </script>
 
 <h1>{ data.competition ? 'Update' : 'Add' } Competition</h1>
@@ -18,7 +17,7 @@
 	</p>
 
 	<p>
-		<p>Gender *</p>
+		Gender *
 		<label><input name="gender" type="radio" value="Men" checked={ data.competition?.gender === 'Men' } /> Men</label>
 		<label><input name="gender" type="radio" value="Women" checked={ data.competition?.gender === 'Women' } /> Women</label>
 	</p>

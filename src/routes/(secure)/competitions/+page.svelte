@@ -1,25 +1,12 @@
 <script>
+	import { enhance } from '$app/forms';
+
 	let { data } = $props();
-
-	async function deleteRecord( record ) {
-		const isConfirmed = window.confirm( `Are you sure you want to delete "${record.identifier}?"` );
-
-		if ( isConfirmed ) {
-			const formData = new FormData();
-
-			formData.append( 'id', record.id );
-
-			const response = await fetch( '?/delete', {
-				method: 'POST',
-				body: formData,
-			} );
-
-			location.href = '/competitions';
-		}
-	}
 </script>
 
 <h1>Competitions</h1>
+
+<p><a href="competitions/add" class="button">Add Competition</a></p>
 
 <figure>
 	<table>
@@ -41,7 +28,14 @@
 					<td>{ competition.gender }</td>
 					<td>{ competition.ageOver }</td>
 					<td class="align-right">
-						<button onclick={ () => deleteRecord( competition ) }>Delete</button>
+						<form method="POST" action="?/delete" use:enhance={() => {
+							if ( !confirm( `Are you sure you want to delete "${competition.identifier}"?` ) ) {
+								return () => {}; // cancel submission
+							}
+						} }>
+							<input name="id" type="hidden" value={competition.id} />
+							<button>Delete</button>
+						</form>
 					</td>
 				</tr>
 			{/each}

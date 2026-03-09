@@ -23,7 +23,6 @@ export const actions: Actions = {
 				body: {
 					email,
 					password
-					// callbackURL: '/auth/verification-success'
 				},
 				headers: event.request.headers,
     			asResponse: true
