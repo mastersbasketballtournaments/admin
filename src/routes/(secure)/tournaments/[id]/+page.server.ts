@@ -2,8 +2,8 @@ import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
 
 import { db } from '$lib/server/db';
-import { eq } from 'drizzle-orm';
-import { tournaments, tournaments2competitions } from '$lib/server/db/schema';
+import { eq, asc } from 'drizzle-orm';
+import { tournaments, competitions, tournaments2competitions } from '$lib/server/db/schema';
 
 import crypto from 'node:crypto';
 import { log } from 'node:console';
@@ -14,7 +14,9 @@ export const load: PageServerLoad = async ( { params } ) => {
 	} );
 
 	if ( params.id != 'add' ) {
-		const tournament = await db.query.tournaments.findFirst({
+
+// MySQL v8 version
+		/* const tournament = await db.query.tournaments.findFirst( {
 			where: ( tournaments, { eq } ) => eq( tournaments.id, params.id ),
 			with: {
 					tournaments2competitions: {
@@ -34,7 +36,19 @@ export const load: PageServerLoad = async ( { params } ) => {
 		} );
 
 		const assignedCompetitions = tournament?.tournaments2competitions
-			.map( t2c => t2c.competition ) ?? [];
+			.map( t2c => t2c.competition ) ?? []; */
+
+// MySQL v5 version doesn't support LEFT JOIN LATERAL that with: uses above
+		const tournament = await db.query.tournaments.findFirst( {
+			where: ( tournaments, { eq } ) => eq( tournaments.id, params.id ),
+		} );
+
+		const assignedCompetitions = await db
+			.select( { id: competitions.id, identifier: competitions.identifier } )
+			.from( competitions )
+			.innerJoin( tournaments2competitions, eq( tournaments2competitions.competitionID, competitions.id ) )
+			.where( eq( tournaments2competitions.tournamentID, params.id ) )
+			.orderBy( asc( competitions.identifier ) );
 
 		return {
 			tournament: tournament,
