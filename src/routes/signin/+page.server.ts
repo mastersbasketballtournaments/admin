@@ -22,9 +22,11 @@ export const actions: Actions = {
 			await auth.api.signInEmail( {
 				body: {
 					email,
-					password,
-					callbackURL: '/auth/verification-success'
-				}
+					password
+					// callbackURL: '/auth/verification-success'
+				},
+				headers: event.request.headers,
+    			asResponse: true
 			} );
 		} catch ( error ) {
 			if ( error instanceof APIError ) {

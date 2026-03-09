@@ -7,7 +7,7 @@
 
 <h1>Sign In</h1>
 
-<form method="POST">
+<form method="POST" use:enhance>
 	<p>
 		<label for="email">Email address</label>
 		<input id="email" name="email" type="email" >

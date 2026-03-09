@@ -16,16 +16,18 @@
 		"db:studio": "drizzle-kit studio",
 		"auth:schema": "better-auth generate --config src/lib/server/auth.ts --output src/lib/server/db/auth.schema.ts --yes"
 	},
+	"dependencies": {
+		"better-auth": "~1.4.21",
+		"drizzle-orm": "^0.45.1",
+		"mysql2": "^3.16.3"
+	},
 	"devDependencies": {
 		"@better-auth/cli": "~1.4.21",
 		"@sveltejs/adapter-auto": "^7.0.0",
 		"@sveltejs/kit": "^2.50.2",
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",
 		"@types/node": "^22",
-		"better-auth": "~1.4.21",
 		"drizzle-kit": "^0.31.8",
-		"drizzle-orm": "^0.45.1",
-		"mysql2": "^3.16.3",
 		"svelte": "^5.51.0",
 		"svelte-check": "^4.4.2",
 		"typescript": "^5.9.3",
