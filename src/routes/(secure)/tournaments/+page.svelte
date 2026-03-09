@@ -12,6 +12,8 @@
 
 <h1>Tournaments</h1>
 
+<p><a href="tournaments/add" class="button">Add Tournament</a></p>
+
 <figure>
 	<table>
 		<thead>
