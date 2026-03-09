@@ -4,7 +4,7 @@ import { mysqlTable, char, varchar, datetime, date } from 'drizzle-orm/mysql-cor
 export const tournaments = mysqlTable( 'tournaments', {
 	id: varchar( 'id', { length: 255 } ).primaryKey().notNull(),
 
-	old_id: char( { length: 36 } ),
+	old_id: char( 'old_id', { length: 36 } ),
 
 	name: varchar( 'name', { length: 255 } ).notNull(),
 	dateStart: date( 'dateStart', { mode: 'string' } ).notNull(),
@@ -19,8 +19,8 @@ export const tournaments = mysqlTable( 'tournaments', {
 	country: varchar( 'country', { length: 255 } ).notNull(),
 	location: varchar( 'location', { length: 255 } ).notNull(),
 
-	createdAt: datetime().default(sql`now()`).notNull(),
-	updatedAt: datetime().default(sql`now()`).notNull(),
+	createdAt: datetime().default( sql`now()` ).notNull(),
+	updatedAt: datetime().default( sql`now()` ).$onUpdateFn( () => new Date() ).notNull(),
 	deletedAt: datetime(),
 } );
 

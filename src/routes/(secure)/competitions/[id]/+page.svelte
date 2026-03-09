@@ -18,7 +18,7 @@
 	</p>
 
 	<p>
-		<label>Gender *</label>
+		<p>Gender *</p>
 		<label><input name="gender" type="radio" value="Men" checked={ data.competition?.gender === 'Men' } /> Men</label>
 		<label><input name="gender" type="radio" value="Women" checked={ data.competition?.gender === 'Women' } /> Women</label>
 	</p>

@@ -88,7 +88,7 @@ export const actions: Actions = {
 			await db.transaction(async (tx) => {
 				let tournamentUUID = crypto.randomUUID();
 
-				await db.insert( tournaments ).values(
+				await tx.insert( tournaments ).values(
 					{
 						id: tournamentUUID,
 						name: name,
@@ -123,34 +123,34 @@ export const actions: Actions = {
 
 			throw redirect( 303, '/tournaments/add' );
 		} else {
-			await db.update( tournaments )
-				.set( {
-					name: name,
-					dateStart: dateStart,
-					dateEnd: dateEnd,
-					contact: contact,
-					emailAddress: emailAddress,
-					website: website,
-					facebook: facebook,
-					twitter: twitter,
-					instagram: instagram,
-					continent: continent,
-					country: country,
-					location: location
-				} ).where( eq( tournaments.id, id ) )
+			await db.transaction( async ( tx ) => {
+				await tx.update( tournaments )
+					.set( {
+						name: name,
+						dateStart: dateStart,
+						dateEnd: dateEnd,
+						contact: contact,
+						emailAddress: emailAddress,
+						website: website,
+						facebook: facebook,
+						twitter: twitter,
+						instagram: instagram,
+						continent: continent,
+						country: country,
+						location: location
+					} ).where( eq( tournaments.id, id ) )
 
-				await db.transaction( async ( tx ) => {
-					await tx.delete( tournaments2competitions )
-						.where( eq( tournaments2competitions.tournamentID, id ) );
+				await tx.delete( tournaments2competitions )
+					.where( eq( tournaments2competitions.tournamentID, id ) );
 
-					if ( selectedCompetitions.length > 0 ) {
-						await tx.insert( tournaments2competitions )
-							.values( selectedCompetitions.map( competitionID => ( {
-								tournamentID: id,
-								competitionID,
-							} ) ) );
-					}
-				} );
+				if ( selectedCompetitions.length > 0 ) {
+					await tx.insert( tournaments2competitions )
+						.values( selectedCompetitions.map( competitionID => ( {
+							tournamentID: id,
+							competitionID,
+						} ) ) );
+				}
+			} );
 
 			/* if ( error ) {
 				return fail( 500, {
