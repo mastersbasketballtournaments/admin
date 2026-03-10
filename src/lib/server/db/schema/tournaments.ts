@@ -1,5 +1,5 @@
 import { relations, sql } from 'drizzle-orm';
-import { mysqlTable, char, varchar, datetime, date } from 'drizzle-orm/mysql-core';
+import { mysqlTable, char, varchar, datetime, date, timestamp } from 'drizzle-orm/mysql-core';
 
 export const tournaments = mysqlTable( 'tournaments', {
 	id: varchar( 'id', { length: 255 } ).primaryKey().notNull(),
@@ -20,7 +20,10 @@ export const tournaments = mysqlTable( 'tournaments', {
 	location: varchar( 'location', { length: 255 } ).notNull(),
 
 	createdAt: datetime().default( sql`now()` ).notNull(),
-	updatedAt: datetime().default( sql`now()` ).$onUpdateFn( () => new Date() ).notNull(),
+	updatedAt: timestamp("updatedAt", { fsp: 3 })
+		.defaultNow()
+		.$onUpdate(() => /* @__PURE__ */ new Date())
+		.notNull(),
 	deletedAt: datetime(),
 } );
 
