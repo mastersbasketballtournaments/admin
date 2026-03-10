@@ -3,7 +3,7 @@
 
 	let { data, form }: { data: PageData, form: ActionData } = $props();
 
-	let selectedCompetitions = new Set( data.assignedCompetitions.map( c => c.id ) );
+	let selectedCompetitions = $derived( new Set( data.assignedCompetitions.map( c => c.id ) ) );
 </script>
 
 <h1>{ data.tournament ? 'Update' : 'Add' } Tournament</h1>
