@@ -1,11 +1,9 @@
 import { relations, sql } from 'drizzle-orm';
-import { mysqlTable, char, varchar, datetime, date, timestamp } from 'drizzle-orm/mysql-core';
+import { pgTable, char, varchar, timestamp, date } from 'drizzle-orm/pg-core';  // ← changed
 
-export const tournaments = mysqlTable( 'tournaments', {
+export const tournaments = pgTable( 'tournaments', {   // ← pgTable
 	id: varchar( 'id', { length: 255 } ).primaryKey().notNull(),
-
 	old_id: char( 'old_id', { length: 36 } ),
-
 	name: varchar( 'name', { length: 255 } ).notNull(),
 	dateStart: date( 'dateStart', { mode: 'string' } ).notNull(),
 	dateEnd: date( 'dateEnd', { mode: 'string' } ).notNull(),
@@ -18,23 +16,10 @@ export const tournaments = mysqlTable( 'tournaments', {
 	continent: varchar( 'continent', { length: 255 } ).notNull(),
 	country: varchar( 'country', { length: 255 } ).notNull(),
 	location: varchar( 'location', { length: 255 } ).notNull(),
-
-	createdAt: datetime().default( sql`now()` ).notNull(),
-	updatedAt: timestamp("updatedAt", { fsp: 3 })
-		.defaultNow()
-		.$onUpdate(() => /* @__PURE__ */ new Date())
+	createdAt: timestamp( 'createdAt' ).default( sql`now()` ).notNull(), 
+	updatedAt: timestamp( 'updatedAt' )
+		.default( sql`now()` )
+		.$onUpdateFn( () => new Date() )
 		.notNull(),
-	deletedAt: datetime(),
+	deletedAt: timestamp( 'deletedAt' ),
 } );
-
-/*
-	createdAt: datetime().default(sql`now()`).notNull(),
-	updatedAt: datetime().default(sql`now()`).notNull(),
-	deletedAt: datetime(),
-
-
-
-	dateCreated: datetime().default(sql`now()`).notNull(),
-	dateUpdated: datetime().default(sql`now()`).notNull(),
-	dateDeleted: datetime(),
- */

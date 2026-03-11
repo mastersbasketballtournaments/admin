@@ -1,14 +1,13 @@
-import { drizzle } from 'drizzle-orm/mysql2';
-import mysql from 'mysql2/promise';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 import * as schema from './schema';
 import { env } from '$env/dynamic/private';
 
 if ( !env.DATABASE_URL ) throw new Error( 'DATABASE_URL is not set' );
 
-const client = mysql.createPool( {
-		uri: env.DATABASE_URL,
-		connectionLimit: 1,  // keep it low for serverless
-		waitForConnections: true,
+const client = postgres( env.DATABASE_URL, {
+	max: 1,
+	prepare: false  // ← required for Supabase transaction pooler in prod
 } );
 
-export const db = drizzle( client, { schema, mode: 'default' } );
+export const db = drizzle( client, { schema } );

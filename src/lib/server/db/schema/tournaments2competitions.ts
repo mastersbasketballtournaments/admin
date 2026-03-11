@@ -1,16 +1,17 @@
 import { relations } from 'drizzle-orm';
-import { mysqlTable, varchar, char, primaryKey } from 'drizzle-orm/mysql-core';
+import { pgTable, varchar, char, primaryKey } from 'drizzle-orm/pg-core';  
 import { tournaments } from './tournaments';
 import { competitions } from './competitions';
 
-export const tournaments2competitions = mysqlTable( 'tournaments2competitions', {
-	tournamentID: varchar( 'tournamentID', { length: 255 } ).notNull().references(() => tournaments.id, { onDelete: 'cascade' } ),
-	competitionID: varchar( 'competitionID', { length: 255 } ).notNull().references( () => competitions.id),
+export const tournaments2competitions = pgTable( 'tournaments2competitions', {
+	tournamentID: varchar( 'tournamentID', { length: 255 } ).notNull().references( () => tournaments.id, { onDelete: 'cascade' } ),
+	competitionID: varchar( 'competitionID', { length: 255 } ).notNull().references( () => competitions.id ),
 	old_tournamentID: char( 'old_tournamentID', { length: 36 } ),
 	old_competitionID: char( 'old_competitionID', { length: 36 } ),
 }, ( table ) => [
 	primaryKey( { columns: [ table.tournamentID, table.competitionID ] } ),
 ] );
+
 
 export const tournamentsRelations = relations( tournaments, ( { many } ) => ( {
 	tournaments2competitions: many( tournaments2competitions ),

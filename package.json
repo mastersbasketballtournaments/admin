@@ -19,7 +19,7 @@
 	"dependencies": {
 		"better-auth": "~1.4.21",
 		"drizzle-orm": "^0.45.1",
-		"mysql2": "^3.16.3"
+		"postgres": "^3.4.8"
 	},
 	"devDependencies": {
 		"@better-auth/cli": "~1.4.21",
