@@ -9,6 +9,8 @@
 		year: 'numeric'
 	} );
 
+	const truncate = ( str: string, length: number = 20 ) => str.length > length ? str.slice( 0, length ) + '...' : str;
+
 	async function deleteRecord( record ) {
 		const isConfirmed = window.confirm( `Are you sure you want to delete "${record.name}?"` );
 
@@ -39,11 +41,11 @@
 			{#each tournaments as tournament}
 				<tr>
 					<td>
-						<a href="/tournaments/{ tournament.id }">{ tournament.name }</a>
+						<a href="/tournaments/{ tournament.id }">{ truncate ( tournament.name ) }</a>
 						<a href="{ tournament.website }" target="_blank" rel="noopener noreferrer">link</a><br>
 						{ formatDate.format( new Date( tournament.dateStart ) ) } - { formatDate.format( new Date( tournament.dateEnd ) ) }
 					</td>
-					<td>{ tournament.country }, { tournament.location }</td>
+					<td>{ truncate( tournament.location, 15 ) }, { truncate( tournament.country, 15 ) }</td>
 					<td class="align-right">
 						<button onclick={ () => deleteRecord( tournament ) }>Delete</button>
 					</td>
