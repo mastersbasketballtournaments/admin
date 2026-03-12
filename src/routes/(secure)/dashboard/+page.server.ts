@@ -5,7 +5,7 @@ import { tournaments } from '$lib/server/db/schema';
 
 export async function load() {
 	const recordset = await db.query.tournaments.findMany( {
-		where: ( tournaments, { gte } ) => gte( tournaments.dateEnd, sql`current_date` ),
+		where: ( tournaments, { lt } ) => lt( tournaments.dateStart, sql`current_date` ),
 		orderBy: ( tournaments, { asc } ) => asc( tournaments.dateStart )
 	} );
 
