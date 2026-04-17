@@ -6,7 +6,7 @@ import { asc, gte, sql } from 'drizzle-orm';
 
 export const GET: RequestHandler = async () => {
 	const allTournaments = await db.query.tournaments.findMany( {
-		where: ( tournaments, { gte } ) => gte( tournaments.dateStart, sql`current_date` ),
+		where: ( tournaments, { gte } ) => gte( tournaments.dateEnd, sql`current_date` ),
 		orderBy: asc( tournaments.dateStart ),
 		with: {
 			tournaments2competitions: {
